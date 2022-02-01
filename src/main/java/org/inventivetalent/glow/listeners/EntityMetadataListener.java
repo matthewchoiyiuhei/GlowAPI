@@ -8,8 +8,11 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.inventivetalent.glow.GlowAPI;
@@ -38,13 +41,14 @@ public class EntityMetadataListener implements PacketListener {
 
         final Player player = packetEvent.getPlayer();
         final World world = player.getWorld();
-        final Entity entity = world
-            .getEntities()
-            .parallelStream()
-            .filter(worldEntity -> worldEntity.getEntityId() == entityId)
-            .findAny()
-            .orElse(null);
+        final Entity entity = wrappedPacket.getEntity(world);
         if (entity == null) return;
+        if(entity.getType() == EntityType.ARMOR_STAND){
+            ArmorStand armorStand = (ArmorStand) entity;
+            if(!armorStand.isVisible()){
+                return;
+            }
+        }
 
         //Check if the entity is glowing
         if (!GlowAPI.isGlowing(entity, player)) return;
@@ -56,6 +60,7 @@ public class EntityMetadataListener implements PacketListener {
         byte entityByte = (byte) entityObj;
         entityByte = (byte) (entityByte | GlowAPI.ENTITY_GLOWING_EFFECT);
         wrappedEntityObj.setValue(entityByte);
+
     }
 
     @Override
