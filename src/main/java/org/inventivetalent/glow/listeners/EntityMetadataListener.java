@@ -30,9 +30,6 @@ public class EntityMetadataListener implements PacketListener {
 
         final int entityId = wrappedPacket.getEntityID();
         if (entityId < 0) {//Our packet
-            //Reset the ID and let it through
-            final int invertedEntityId = -entityId;
-            wrappedPacket.setEntityID(invertedEntityId);
             return;
         }
 

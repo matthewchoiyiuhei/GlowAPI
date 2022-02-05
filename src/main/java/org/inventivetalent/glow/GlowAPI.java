@@ -127,8 +127,8 @@ public class GlowAPI extends JavaPlugin {
 		protocolManager = ProtocolLibrary.getProtocolManager();
 		asynchronousManager = protocolManager.getAsynchronousManager();
 
-		entityMetadataListenerHandler = asynchronousManager.registerAsyncHandler(entityMetadataListener);
-		entityMetadataListenerHandler.start();
+		protocolManager.addPacketListener(entityMetadataListener);
+		//entityMetadataListenerHandler.start();
 	}
 
 	@Override
